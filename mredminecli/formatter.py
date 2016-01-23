@@ -139,6 +139,8 @@ class ListFormatter(BaseFormatter):
                         new_group = False
                     out_list(**item)
                     last_item = item
+            if last_item and self.formats['group_separator']:
+                out_separator(**last_item)
         else:
             for item in self._order_result(result):
                 out_list(**item)
