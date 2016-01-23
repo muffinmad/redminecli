@@ -1,0 +1,2 @@
+class RedmineCliException(Exception):
+    pass
