@@ -3,7 +3,7 @@ import sys
 from collections import OrderedDict
 from arguments import Arguments as A, ArgumentsParser
 from config import Config
-from resource import ProjectResource, IssueResource
+from resource import ProjectResource, IssueResource, UserResource
 
 try:
     from redmine import Redmine
@@ -27,7 +27,7 @@ class RedmineCli(object):
     ]
 
     resources = OrderedDict({r.name: r for r in [
-        ProjectResource, IssueResource
+        ProjectResource, IssueResource, UserResource
     ]})
 
     def __init__(self):

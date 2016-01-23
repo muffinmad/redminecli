@@ -107,3 +107,24 @@ class IssueListCommand(BaseCommand):
         'project': 'project_id',
         'tracker': 'tracker_id'
     }
+
+
+class UserListCommand(BaseCommand):
+    formatter_class = ListFormatter
+    name = 'list'
+    redmine_name = 'filter'
+    description = 'User list'
+
+    arguments = [
+        A('--status', type=int, help='User status. 0 - anonymous, 1 - active (default), 2 - registered, 3 - locked'),
+        A('--name', help='Filter users on their login, firstname, lastname and mail. If the pattern contains a space, it will also return users whose firstname match the first word or lastname match the second word.'),
+        A('--group', type=int, help='Group id')
+    ] + BASE_LIST_COMMAND_ARGS
+
+    params_map = {
+        'limit': 'limit',
+        'offset': 'offset',
+        'status': 'status',
+        'name': 'name',
+        'group': 'group_id'
+    }

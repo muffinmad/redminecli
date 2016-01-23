@@ -26,6 +26,7 @@ project_list_format=%(fg5)s{id:>{id_WIDTH}}%(clr)s %(fg6)s{identifier:<{identifi
 issue_list_format=%(fg5)s{tracker__name:^{tracker__name_WIDTH}}%(clr)s %(fg2)s{priority__name:^{priority__name_WIDTH}}%(clr)s %(fg6)s{status__name:^{status__name_WIDTH}}%(clr)s #{id:>{id_WIDTH}} {subject}
 issue_list_groupby=project__name
 issue_list_group_format=%(bld)s{project__name}%(clr)s
+user_list_format=%(fg5)s{id:>{id_WIDTH}}%(clr)s %(fg6)s{mail:<{mail_WIDTH}}%(clr)s {firstname} {lastname}
 """
 
 
