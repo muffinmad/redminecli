@@ -46,6 +46,8 @@ class BaseFormatter(object):
         if self.orderby_field:
             params.append(self.orderby_field)
         for param in params:
+            if param == 'GROUP':
+                continue
             width_for = param.endswith('_WIDTH')
             param = param.replace('_WIDTH', '')
             if width_for:
@@ -106,12 +108,10 @@ class ListFormatter(BaseFormatter):
         result = {}
         result['list_format'] = unicode(self._get_param('format', '{id}'))
         self.groupby = self._get_param('groupby')
-        gf = ''
         if self.groupby:
-            gf = '{%s}' % self.groupby
-            result['_groupby'] = unicode(gf)
-        result['group_format'] = unicode(self._get_param('group_format', gf))
-        result['group_separator'] = unicode(self._get_param('group_separator', ''))
+            result['_groupby'] = unicode('{%s}' % self.groupby)
+        result['group_format'] = unicode(self._get_param('group_format', self.config.get('_list_group_format')))
+        result['group_separator'] = unicode(self._get_param('group_separator', self.config.get('_list_group_separator', '')))
         return result
 
     def prepare_result(self, result):
@@ -126,21 +126,22 @@ class ListFormatter(BaseFormatter):
         if self.groupby:
             a = itemgetter(self.groupby)
             first = True
-            last_item = None
+            item = None
+            last_group = None
             for group, items in groupby(sorted(result, key=a), key=a):
                 if first:
                     first = False
                 else:
-                    out_separator(**last_item)
+                    partial(out_separator, **item)(GROUP=last_group)
                 new_group = True
                 for item in self._order_result(list(items)):
                     if new_group:
-                        out_group(**item)
+                        partial(out_group, **item)(GROUP=group)
                         new_group = False
                     out_list(**item)
-                    last_item = item
-            if last_item and self.formats['group_separator']:
-                out_separator(**last_item)
+                last_group = group
+            if item and self.formats['group_separator']:
+                partial(out_separator, **item)(GROUP=group)
         else:
             for item in self._order_result(result):
                 out_list(**item)
