@@ -1,6 +1,5 @@
 import sys
 import re
-from itertools import groupby
 from operator import itemgetter
 from functools import partial
 from collections import defaultdict
@@ -121,11 +120,20 @@ class ListFormatter(BaseFormatter):
     def _get_formats(self):
         result = {}
         result['list_format'] = unicode(self._get_param('format', '{id}'))
-        self.groupby = self._get_param('groupby')
+        self.groupby = filter(bool, map(lambda x: x.strip(), self._get_param('groupby', '').split(',')))
         if self.groupby:
-            result['_groupby'] = unicode('{%s}' % self.groupby)
-        result['group_format'] = unicode(self._get_param('group_format', self.config.get('_list_group_format')))
-        result['group_separator'] = unicode(self._get_param('group_separator', self.config.get('_list_group_separator', '')))
+            result['_groupby'] = unicode(''.join(map(lambda x: '{%s}' % x, self.groupby)))
+            i = 0
+            for grp in self.groupby:
+                if i == 0:
+                    result['group_format'] = unicode(self._get_param('group_format', self.config.get('_list_group_format')))
+                    result['group_separator'] = unicode(self._get_param('group_separator', self.config.get('_list_group_separator', '')))
+                else:
+                    k = 'group_format_%d' % i
+                    result[k] = unicode(self._get_param(k, result['group_format']))
+                    k = 'group_separator_%d' % i
+                    result[k] = unicode(self._get_param(k, result['group_separator']))
+                i += 1
         return result
 
     def prepare_result(self, result):
@@ -133,29 +141,58 @@ class ListFormatter(BaseFormatter):
             self._prepare_subvalues(item)
             self._prepare_widths(item)
 
+    def _order_result(self, result):
+        def _sort(a, b):
+            for grp in self.groupby:
+                ag = itemgetter(grp)
+                r = cmp(ag(a), ag(b))
+                if r:
+                    return r
+            ag = itemgetter(self.orderby_field)
+            r = cmp(ag(a), ag(b))
+            return -r if self.orderby_desc else r
+        return sorted(result, cmp=_sort)
+
     def print_result(self, result):
-        out_group = self._get_out('group_format')
         out_list = self._get_out('list_format')
-        out_separator = self._get_out('group_separator')
-        if self.groupby:
-            a = itemgetter(self.groupby)
-            first = True
-            item = None
-            last_group = None
-            for group, items in groupby(sorted(result, key=a), key=a):
-                if first:
-                    first = False
-                else:
-                    partial(out_separator, **item)(GROUP=last_group, INDENT_LEVEL=0)
-                new_group = True
-                for item in self._order_result(list(items)):
-                    if new_group:
-                        partial(out_group, **item)(GROUP=group, INDENT_LEVEL=0)
-                        new_group = False
-                    partial(out_list, **item)(INDENT_LEVEL=1)
-                last_group = group
-            if item and self.formats['group_separator']:
-                partial(out_separator, **item)(GROUP=group, INDENT_LEVEL=0)
-        else:
-            for item in self._order_result(result):
-                out_list(**item)
+        groups = len(self.groupby)
+        prev_item = None
+        prev_item_groups = [None] * groups
+
+        def _print_separator(idx, item_groups, print_empty=True):
+            empty_printed = False
+            for x in reversed(xrange(idx, groups)):
+                k = 'group_separator' if x == 0 else 'group_separator_%d' % x
+                fmt = self.formats[k]
+                if fmt == 'EMPTY':
+                    if not empty_printed:
+                        if print_empty:
+                            print
+                        empty_printed = True
+                elif fmt:
+                    empty_printed = False
+                    out_separator = self._get_out(k)
+                    partial(out_separator, **prev_item)(GROUP=item_groups[x], INDENT_LEVEL=x)
+
+        item = None
+        for item in self._order_result(result):
+            item_groups = [item[g] for g in self.groupby]
+            if prev_item:
+                i = groups
+                if prev_item_groups != item_groups:
+                    for x in xrange(len(item_groups)):
+                        if item_groups[x] != prev_item_groups[x]:
+                            i = x
+                            break
+                _print_separator(i, item_groups)
+            else:
+                i = 0
+            for x in xrange(i, len(item_groups)):
+                k = 'group_format' if x == 0 else 'group_format_%d' % x
+                out_group = self._get_out(k)
+                partial(out_group, **item)(GROUP=item_groups[x], INDENT_LEVEL=x)
+            partial(out_list, **item)(INDENT_LEVEL=groups)
+            prev_item = item
+            prev_item_groups = item_groups
+        if item:
+            _print_separator(0, item_groups, False)

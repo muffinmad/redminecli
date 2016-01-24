@@ -22,11 +22,12 @@ fg6=\033[0;36m
 fg7=\033[0;37m
 bld=\033[1m
 clr=\033[0m
-_list_group_format=%(bld)s{GROUP}%(clr)s
+_list_group_format={INDENT}%(bld)s{GROUP}%(clr)s
 _list_group_indent_width=2
 project_list_format=%(fg5)s{id:>{id_WIDTH}}%(clr)s %(fg6)s{identifier:<{identifier_WIDTH}}%(clr)s {name}
-issue_list_format={INDENT}%(fg5)s{tracker__name:^{tracker__name_WIDTH}}%(clr)s %(fg2)s{priority__name:^{priority__name_WIDTH}}%(clr)s %(fg6)s{status__name:^{status__name_WIDTH}}%(clr)s #{id:>{id_WIDTH}} {subject}
-issue_list_groupby=project__name
+issue_list_format={INDENT}%(fg2)s{priority__name:^{priority__name_WIDTH}}%(clr)s %(fg6)s{status__name:^{status__name_WIDTH}}%(clr)s #{id:>{id_WIDTH}} {subject}
+issue_list_group_format_1={INDENT}%(fg5)s{GROUP}%(clr)s
+issue_list_groupby=project__name, tracker__name
 user_list_format=%(fg5)s{id:>{id_WIDTH}}%(clr)s %(fg6)s{mail:<{mail_WIDTH}}%(clr)s {firstname} {lastname}
 """
 
