@@ -20,7 +20,7 @@ class BaseFormatter(object):
             self.orderby_field = o[0]
             self.orderby_desc = len(o) > 1 and o[1] == 'desc'
         else:
-            self.orderby = orderby
+            self.orderby_field = None
         self._values = set()
         self._subvalues = set()
         self._width_for = set()
@@ -196,3 +196,9 @@ class ListFormatter(BaseFormatter):
             prev_item_groups = item_groups
         if item:
             _print_separator(0, item_groups, False)
+
+
+class ResourceFormatter(BaseFormatter):
+
+    def _get_formats(self):
+        result = {}

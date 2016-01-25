@@ -37,7 +37,7 @@ class BaseCommand(object):
             result[command_param] = value
         return result
 
-    def get_additional_params(self):
+    def get_command_args(self):
         return []
 
     def run(self):
@@ -50,9 +50,9 @@ class BaseCommand(object):
         func = getattr(redmine_resource, command_name, None)
         if not func or not callable(func):
             raise RedmineCliException('Redmine resource %s has no callable %s' % (redmine_resource_name, command_name))
-        result = func(**self.get_command_params()).values(*formatter.values)
+        result = func(*self.get_command_args(), **self.get_command_params())
         if isinstance(result, ResourceSet):
-            result = list(result)
+            result = list(result.values(*formatter.values))
         formatter.prepare_result(result)
         formatter.print_result(result)
 
@@ -105,8 +105,22 @@ class IssueListCommand(BaseCommand):
         'offset': 'offset',
         'order': 'sort',
         'project': 'project_id',
-        'tracker': 'tracker_id'
+        'tracker': 'tracker_id',
+        'query': 'query_id'
     }
+
+
+class IssueShowCommand(BaseCommand):
+    name = 'show'
+    redmine_name = 'get'
+    description = 'Show issue details'
+
+    arguments = [
+        A('issue_id', type=int, help='Issue id')
+    ]
+
+    def get_command_args(self):
+        return [self.config.get_arg('issue_id')]
 
 
 class UserListCommand(BaseCommand):
