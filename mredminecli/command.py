@@ -211,3 +211,20 @@ class UserListCommand(BaseCommand):
         'name': 'name',
         'group': 'group_id'
     }
+
+
+class VersionListCommand(BaseCommand):
+    formatter_class = ListFormatter
+    name = 'list'
+    redmine_name = 'filter'
+    description = 'Version list'
+
+    arguments = [
+        A('project', type=int_or_string, help='Project id or identifier'),
+    ] + BASE_LIST_COMMAND_ARGS
+
+    params_map = {
+        'limit': 'limit',
+        'offset': 'offset',
+        'project': 'project_id'
+    }

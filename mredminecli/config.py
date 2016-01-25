@@ -23,6 +23,7 @@ fg7=\033[0;37m
 bld=\033[1m
 clr=\033[0m
 empty_str=
+_list_format=%(fg5)s{id:>{id_WIDTH}}%(clr)s {name}
 _list_group_format={INDENT}%(bld)s{GROUP}%(clr)s
 _list_group_indent_width=2
 project_list_format=%(fg5)s{id:>{id_WIDTH}}%(clr)s %(fg6)s{identifier:<{identifier_WIDTH}}%(clr)s {name}

@@ -121,7 +121,7 @@ class ListFormatter(BaseFormatter):
 
     def _get_formats(self):
         result = {}
-        result['list_format'] = unicode(self._get_param('format', '{id}'))
+        result['list_format'] = unicode(self._get_param('format', self.config.get('_list_format')))
         self.groupby = filter(bool, map(lambda x: x.strip(), self._get_param('groupby', '').split(',')))
         if self.groupby:
             result['_groupby'] = unicode(''.join(map(lambda x: '{%s}' % x, self.groupby)))
