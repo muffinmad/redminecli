@@ -1,5 +1,6 @@
 from collections import OrderedDict
-from command import ProjectListCommand, IssueListCommand, IssueShowCommand, UserListCommand
+from command import ProjectListCommand, IssueListCommand, IssueShowCommand, IssueUpdateCommand,\
+    IssueCreateCommand, UserListCommand
 
 
 class BaseResource(object):
@@ -29,7 +30,7 @@ class IssueResource(BaseResource):
     name = 'issue'
 
     commands = OrderedDict({c.name: c for c in [
-        IssueListCommand, IssueShowCommand
+        IssueListCommand, IssueShowCommand, IssueUpdateCommand, IssueCreateCommand
     ]})
 
 
