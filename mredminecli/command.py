@@ -1,7 +1,7 @@
 import argparse
 from . import RedmineCliException
 from arguments import Arguments as A
-from formatter import BaseFormatter, ListFormatter
+from formatter import BaseFormatter, ListFormatter, ResourceFormatter
 from redmine.resultsets import ResourceSet
 
 
@@ -111,6 +111,7 @@ class IssueListCommand(BaseCommand):
 
 
 class IssueShowCommand(BaseCommand):
+    formatter_class = ResourceFormatter
     name = 'show'
     redmine_name = 'get'
     description = 'Show issue details'

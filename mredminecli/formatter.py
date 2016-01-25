@@ -60,7 +60,7 @@ class BaseFormatter(object):
     def values(self):
         return self._values
 
-    def _prepare_subvalues(self, obj):
+    def _prepare_subvalues(self, obj, default='', print_missing=False):
         for sv in self._subvalues:
             subvals = sv.split('__')
             value = obj
@@ -70,7 +70,9 @@ class BaseFormatter(object):
                     value = value[s]
                 obj[sv] = value
             except (KeyError, TypeError):
-                print >> sys.stderr, '%s has no %s' % (value, s)
+                if print_missing:
+                    print >> sys.stderr, '%s has no %s' % (value, s)
+                obj[sv] = default
 
     def _prepare_widths(self, obj):
         for w in self._width_for:
@@ -202,3 +204,11 @@ class ResourceFormatter(BaseFormatter):
 
     def _get_formats(self):
         result = {}
+        result['issue_format'] = unicode(self._get_param('format', '{id}'))
+        return result
+
+    def print_result(self, result):
+        result = dict(list(result))
+        self._prepare_subvalues(result)
+        out = self._get_out('issue_format')
+        out(**result)
