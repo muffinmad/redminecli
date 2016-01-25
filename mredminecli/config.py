@@ -32,9 +32,11 @@ issue_list_groupby=project__name, tracker__name
 user_list_format=%(fg5)s{id:>{id_WIDTH}}%(clr)s %(fg6)s{mail:<{mail_WIDTH}}%(clr)s {firstname} {lastname}
 issue_show_format=%(bld)sProject:%(clr)s {project__name}
     %(bld)sCategory:%(clr)s {category__name}
+    %(bld)sPriority:%(clr)s {priority__name}
     %(bld)sAuthor:%(clr)s {author__name}
     %(bld)sCreated on:%(clr)s {created_on}
     %(bld)sAssigned to:%(clr)s {assigned_to__name}
+    %(bld)sDone ratio:%(clr)s {done_ratio}
     %(bld)sSubject:%(clr)s {subject}
     %(empty_str)s
     {description}

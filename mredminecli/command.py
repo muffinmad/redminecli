@@ -1,7 +1,7 @@
 import argparse
 from . import RedmineCliException
 from arguments import Arguments as A
-from formatter import BaseFormatter, ListFormatter, ResourceFormatter
+from formatter import BaseFormatter, ListFormatter, ResourceFormatter, UpdateFormatter
 from redmine.resultsets import ResourceSet
 
 
@@ -122,6 +122,74 @@ class IssueShowCommand(BaseCommand):
 
     def get_command_args(self):
         return [self.config.get_arg('issue_id')]
+
+
+BASE_ISSUE_PROPS_ARGS = [
+    A('--tracker', type=int, help='Tracker id'),
+    A('--description', help='Description'),
+    A('--notes', help='Add journal note'),
+    A('--private_notes', action='store_true', help='Notes are private'),
+    A('--status', type=int, help='Status id'),
+    A('--priority', type=int, help='Priority id'),
+    A('--category', type=int, help='Category id'),
+    A('--version', type=int, help='Version id'),
+    A('--private', action='store_true', help='Issue is private'),
+    A('--assigned', type=int, help='User id'),
+    A('--parent_issue', type=int, help='Parent issue id'),
+    A('--done_ratio', type=int, help='Issue done ratio')
+]
+
+
+BASE_ISSUE_PROPS_MAP = {
+    'project': 'project_id',
+    'subject': 'subject',
+    'tracker': 'tracker_id',
+    'description': 'description',
+    'notes': 'notes',
+    'private_notes': 'private_notes',
+    'status': 'status_id',
+    'priority': 'priority_id',
+    'category': 'category',
+    'version': 'fixed_version_id',
+    'private': 'is_private',
+    'assigned': 'assigned_to_id',
+    'parent_issue': 'parent_issue_id',
+    'done_ratio': 'done_ratio'
+}
+
+
+class IssueUpdateCommand(BaseCommand):
+    formatter_class = UpdateFormatter
+    name = 'update'
+    description = 'Update issue'
+
+    arguments = [
+        A('issue_id', type=int, help='Issue id'),
+        A('--project', type=int, help='Project id'),
+        A('--subject', help='Subject'),
+    ] + BASE_ISSUE_PROPS_ARGS
+
+    def get_command_args(self):
+        return [self.config.get_arg('issue_id')]
+
+    params_map = BASE_ISSUE_PROPS_MAP
+
+
+class IssueCreateCommand(BaseCommand):
+    formatter_class = ResourceFormatter
+    name = 'create'
+    description = 'Create issue'
+
+    arguments = [
+        A('project', type=int_or_string, help='Project id or identifier'),
+        A('subject', help='Subject'),
+    ] + BASE_ISSUE_PROPS_ARGS
+
+    params_map = BASE_ISSUE_PROPS_MAP
+
+    def get_formatter(self, *args, **kwargs):
+        kwargs.update(base_key='%s_%s' % (self.resource.name, IssueShowCommand.name))
+        return super(IssueCreateCommand, self).get_formatter(*args, **kwargs)
 
 
 class UserListCommand(BaseCommand):

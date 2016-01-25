@@ -208,7 +208,16 @@ class ResourceFormatter(BaseFormatter):
         return result
 
     def print_result(self, result):
-        result = dict(list(result))
-        self._prepare_subvalues(result)
+        dresult = {x: '' for x in self.values}
+        dresult.update(dict(list(result)))
+        if hasattr(result, 'created_on'):
+            dresult['created_on'] = result.created_on
+        self._prepare_subvalues(dresult)
         out = self._get_out('issue_format')
-        out(**result)
+        out(**dresult)
+
+
+class UpdateFormatter(BaseFormatter):
+
+    def print_result(self, result):
+        print('ok' if result is True else 'no')
