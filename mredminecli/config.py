@@ -31,7 +31,8 @@ issue_list_format={INDENT}%(fg2)s{priority__name:^{priority__name_WIDTH}}%(clr)s
 issue_list_group_format_1={INDENT}%(fg5)s{GROUP}%(clr)s
 issue_list_groupby=project__name, tracker__name
 user_list_format=%(fg5)s{id:>{id_WIDTH}}%(clr)s %(fg6)s{mail:<{mail_WIDTH}}%(clr)s {firstname} {lastname}
-issue_show_format=%(bld)sProject:%(clr)s {project__name}
+issue_show_format=%(bld)sID:%(clr)s #{id}
+    %(bld)sProject:%(clr)s {project__name}
     %(bld)sCategory:%(clr)s {category__name}
     %(bld)sPriority:%(clr)s {priority__name}
     %(bld)sAuthor:%(clr)s {author__name}
