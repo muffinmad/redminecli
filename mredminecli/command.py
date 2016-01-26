@@ -220,11 +220,25 @@ class VersionListCommand(BaseCommand):
     description = 'Version list'
 
     arguments = [
-        A('project', type=int_or_string, help='Project id or identifier'),
+        A('project', type=int_or_string, help='Project id or identifier')
     ] + BASE_LIST_COMMAND_ARGS
 
     params_map = {
         'limit': 'limit',
         'offset': 'offset',
         'project': 'project_id'
+    }
+
+
+class IssueStatusList(BaseCommand):
+    formatter_class = ListFormatter
+    name = 'list'
+    redmine_name = 'all'
+    description = 'Issue status list'
+
+    arguments = BASE_LIST_COMMAND_ARGS
+
+    params_map = {
+        'limit': 'limit',
+        'offset': 'offset',
     }

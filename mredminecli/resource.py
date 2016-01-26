@@ -1,6 +1,6 @@
 from collections import OrderedDict
 from command import ProjectListCommand, IssueListCommand, IssueShowCommand, IssueUpdateCommand,\
-    IssueCreateCommand, UserListCommand, VersionListCommand
+    IssueCreateCommand, UserListCommand, VersionListCommand, IssueStatusList
 
 
 class BaseResource(object):
@@ -47,4 +47,13 @@ class VersionResource(BaseResource):
 
     commands = OrderedDict({c.name: c for c in [
         VersionListCommand
+    ]})
+
+
+class IssueStatusResource(BaseResource):
+    name = 'issuestatus'
+    redmine_name = 'issue_status'
+
+    commands = OrderedDict({c.name: c for c in [
+        IssueStatusList
     ]})
