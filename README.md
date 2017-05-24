@@ -13,4 +13,10 @@ Redmine command line interface written in python using python-redmine
 
 `./redminecli.py issue list -h`
 
-Other commands not implemented yet.
+`./redminecli.py issuestatus -h`
+
+`./redminecli.py version -h`
+
+`./redminecli.py user -h`
+
+Implemented commands allows to list issues and update them.
