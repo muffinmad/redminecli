@@ -2,7 +2,7 @@ import argparse
 from . import RedmineCliException
 from arguments import Arguments as A
 from formatter import BaseFormatter, ListFormatter, ResourceFormatter, UpdateFormatter
-from redmine.resultsets import ResourceSet
+from redminelib.resultsets import ResourceSet
 
 
 BASE_LIST_COMMAND_ARGS = [

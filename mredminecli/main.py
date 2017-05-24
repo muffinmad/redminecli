@@ -6,7 +6,7 @@ from config import Config
 from resource import ProjectResource, IssueResource, UserResource, VersionResource, IssueStatusResource
 
 try:
-    from redmine import Redmine
+    from redminelib import Redmine
 except ImportError:
     print >> sys.stderr, 'You need to install python-redmine'
     sys.exit(1)
