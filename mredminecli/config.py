@@ -38,6 +38,7 @@ issue_show_format=%(bld)sID:%(clr)s #{id}
     %(bld)sAuthor:%(clr)s {author__name}
     %(bld)sCreated on:%(clr)s {created_on}
     %(bld)sAssigned to:%(clr)s {assigned_to__name}
+    %(bld)sStatus:%(clr)s {status__name}
     %(bld)sDone ratio:%(clr)s {done_ratio}
     %(bld)sSubject:%(clr)s {subject}
     %(empty_str)s

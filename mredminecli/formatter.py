@@ -212,6 +212,8 @@ class ResourceFormatter(BaseFormatter):
         dresult.update(dict(list(result)))
         if hasattr(result, 'created_on'):
             dresult['created_on'] = result.created_on
+        if 'journals' in self.values:
+            dresult['journals'] = '\n'.join([x.notes for x in result.journals if hasattr(x, 'notes')])
         self._prepare_subvalues(dresult)
         out = self._get_out('issue_format')
         out(**dresult)

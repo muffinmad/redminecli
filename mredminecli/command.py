@@ -107,7 +107,8 @@ class IssueListCommand(BaseCommand):
         'project': 'project_id',
         'tracker': 'tracker_id',
         'query': 'query_id',
-        'assigned': 'assigned_to_id'
+        'assigned': 'assigned_to_id',
+        'status': 'status_id'
     }
 
 
